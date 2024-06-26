@@ -1050,7 +1050,7 @@ namespace EasyLazyLibrary
             }
 
             //取得処理
-            inputError = vrinput.GetPoseActionData(handle, UniverseOrigin, PredictedTime, ref data, size, DeviceHandle);
+            inputError = vrinput.GetPoseActionDataRelativeToNow(handle, UniverseOrigin, PredictedTime, ref data, size, DeviceHandle);
             if (inputError == EVRInputError.WrongType)
             {
                 //姿勢ではない
@@ -1179,8 +1179,10 @@ namespace EasyLazyLibrary
             //取得処理
             StringBuilder s = new StringBuilder();
             s.Length = 8192;
-
-            inputError = vrinput.GetOriginLocalizedName(origin.DeviceInternalHandle, s, 8192);
+            //OpenVR SDK1.1.3から、手、コントローラ、ジョイスティックなどを指定して取得できるようになった
+            //ここでは、コントローラ名を取得する
+            int section = (int)EVRInputStringBits.VRInputString_ControllerType;
+            inputError = vrinput.GetOriginLocalizedName(origin.DeviceInternalHandle, s, 8192, section);
             if (inputError != EVRInputError.None)
             {
                 //致命的エラー
